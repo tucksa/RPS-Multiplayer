@@ -1,0 +1,9 @@
+.myConvoBox {
+    height: 100px;
+    overflow-y: scroll;
+    margin:5% 0%;
+}
+#chat-input {
+    height: 75px;
+    width:100%;
+}
