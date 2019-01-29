@@ -11,6 +11,8 @@ firebase.initializeApp(config);
 
 var database= firebase.database();
 var convo = "";
+var playerPicked = "";
+var i=0;
 
 $("#addConvo").click(function(error){
     error.preventDefault();
@@ -31,3 +33,17 @@ function(errObjects){
     consloe.log(errObjects.code)
     }
 )
+
+
+$("#playBtn1").click(function(){
+    $("#playBtn1").css("display", "none");
+    setInterval(rotate, 2500);
+    function rotate(){
+        $("#rps div").last().fadeOut(1000, function(){
+            $(this).insertBefore($("#rps div").first()).show();
+        });
+    }
+});   
+$("#rpsPic").click(function(){
+    playerPicked=$(this).attr("data-name").val()
+})

@@ -1,9 +1,35 @@
 .myConvoBox {
-    height: 100px;
+    height: 200px;
     overflow-y: scroll;
     margin:5% 0%;
 }
 #chat-input {
     height: 75px;
+    width:100%;
+}
+#rps {
+    position:relative;
+    height: 19rem;
+    width:18rem;
+}
+#rpsPic1 {
+    background-image: url("../images/rock.png");
+    background-size: cover;
+    position:absolute;
+    height: 100%;
+    width:100%;
+}
+#rpsPic2 {
+    background-image: url("../images/paper.png");
+    background-size: cover;
+    position:absolute;
+    height: 100%;
+    width:100%;
+}
+#rpsPic3 {
+    background-image: url("../images/scissorss.png");
+    background-size: cover;
+    position:absolute;
+    height: 100%;
     width:100%;
 }
