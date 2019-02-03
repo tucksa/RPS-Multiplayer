@@ -47,3 +47,27 @@ $("#playBtn1").click(function(){
 $("#rpsPic").click(function(){
     playerPicked=$(this).attr("data-name").val()
 })
+//how to code for each user seeing their own values- make array of players
+//if array length is more than 2 warn new user they muust wait
+//put button play functions under each user and hide of other array value
+//use splice to keep array positons the same if player 2 stays and player1 leaves
+var connectionsRef = database.ref("/connections");
+var connectedRef = database.ref(".info/connected");
+connectedRef.on("value", function(snap) {
+    if (snap.val()) {
+      var con = connectionsRef.push(true);
+      con.onDisconnect().remove();
+    }
+  });
+
+  // When first loaded or when the connections list changes...
+  connectionsRef.on("value", function(snapshot) {
+    console.log(snapshot.numChildren());
+    if (snapshot.numChildren()==1){
+        console.log("wait for your opponent")
+    }else if (snapshot.numChildren()==2){
+        console.log("Play!")
+    }else 
+        console.log("Wait your turn...")
+  });
+  
