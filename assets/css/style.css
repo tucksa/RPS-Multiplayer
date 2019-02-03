@@ -2,10 +2,12 @@
     height: 200px;
     overflow-y: scroll;
     margin:5% 0%;
+    background-color: #eee;
 }
 #chat-input {
     height: 75px;
     width:100%;
+    background-color: #eee;
 }
 .rps {
     position:relative;
@@ -53,4 +55,21 @@
     position:absolute;
     height: 100%;
     width:100%;
+}
+#restart {
+    display:none;
+}
+body{
+    background-image: url("../images/diagonal-squares.png");
+}
+h3{
+    background-color:#eee;
+    padding:1%;
+    margin: 5%;
+}
+.myrow {
+    margin-top:5%;
+}
+.myBtn{
+    margin:3%;
 }

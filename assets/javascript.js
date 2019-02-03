@@ -15,43 +15,18 @@ var user1Picked = "";
 var user2Picked= "";
 var p1rot;
 var p2rot;
-// $("#signUp").click(function(e){
-//     e.preventDefault();
-//     var userName= $("#userName").val();
-//     var email = $("#emailInput").val();
-//     var password = $("#passwordInput").val();
-//     firebase.auth().createUserWithEmailAndPassword(email, password)
-//     .then(function(user){
-//         user.updateProfile({userName:userName});
-//     });
-//     $("#login").atrr("display", "none");
-// });
+var p1gone= false;
+var p2gone= false;
 
-// $('#signIn').click(function(e){
-//     e.preventDefault();
-//     var email = $("#emailInput").val();
-//     var password = $("#passwordInput").val();
-//     firebase.auth().signInWithEmailAndPassword(email, password);
-//     $("#userName").empty();
-//     $("#emailInput").empty();
-//     $("#passwordInput").empty(); 
-//     $("#login").attr("display", "none");
-// });
 var connectionsRef = database.ref("/connections");
 var connectedRef = database.ref(".info/connected");
 connectedRef.on("value", function(snap) {
-
-    // If they are connected..
     if (snap.val()) {
-  
-      // Add user to the connections list.
       var con = connectionsRef.push(true);
-  
-      // Remove user from the connection list when they disconnect.
       con.onDisconnect().remove();
     }
   });
-  // When first loaded or when the connections list changes...
+
 connectionsRef.on("value", function(snapshot) {
     if(snapshot.numChildren()==1){
         $("#status").text("wait for opponent");
@@ -62,29 +37,16 @@ connectionsRef.on("value", function(snapshot) {
     }
   });
 
-// firebase.auth().onAuthStateChanged(function(user) {
-//     if (user) {
-     
-//         databas.ref("/player").push({
-//             player: firebase.auth().currentUser
-//         }) 
-//     } else {
-      
-//     }
-//   });
-
-
-
 $("#addConvo").click(function(error){
     error.preventDefault();
     convo = $("#chat-input").val();
     database.ref("/chat").push({
         convo:convo
     });
-    $("#chat-input").html(" ");
+    $("#chat-input").empty();
 });
 database.ref("/chat").on("child_added", function(snapshot){
-    var snap= snapshot.val();
+    var snap= snap;
     var div = $("<div>")
     div.append(snap.convo);
     $("#convo").append(div)
@@ -93,7 +55,6 @@ function(errObjects){
     consloe.log(errObjects.code)
     }
 )
-
 
 $("#playBtn").click(function(){
     $("#playBtn").css("display", "none");
@@ -117,52 +78,84 @@ $("#play2Btn").click(function(){
 })
 
 
-$("#rps1Pic").click(function(){
-    user1Picked=$(this).attr("data-name").val()
-    clearInterval(p1rot);
+$(".rps1Pic").click(function(){
+    user1Picked=$(this).attr("data-name");
     $("#rps1").css("display", "none");
+    clearInterval(p1rot);
+    console.log(user1Picked);
+    p1gone=true;
+    database.ref("/players").push().set({
+        user1Picked:user1Picked,
+        turn1:p1gone
+    })
 })
 
-$("#rps2Pic").click(function(){
-    user2Picked=$(this).attr("data-name").val()
-    clearInterval(p2rot);
+$(".rps2Pic").click(function(){
+    user2Picked=$(this).attr("data-name");
     $("#rps2").css("display", "none");
+    clearInterval(p2rot);
+    console.log(user2Picked);
+    p2gone=true;
+    database.ref("/players").push().set({
+        user2Picked:user2Picked,
+        turn2:p2gone
+    })
 })
 
-// firebase.auth().onAuthStateChanged(authStateChangedListener);
-// function authStateChangeListener(user){
-//     if(user){
-//         //do login opperations
-//         Chat.onlogin();
-//         Game.onlogin();
-//     }else {//signout
-//         window.location.reload()
-//     }
+database.ref("/players").on("value", function(snapshot){
+    var snap= snapshot.val();
+    if(snap.turn1== true && snap.turn2== true){
+    $("#results1").text(snap.user1Picked);
+    user1Picked = snap.user1Picked;
+    $("#results2").text(snap.user2Picked);
+    user2Picked = snap.user2Picked
+    $("#results1").css("display", "block");
+    $("#results2").css("display", "block");
+        if(snap.user1Picked=="rock" && snap.user2Picked=="paper"){
+            $("#results1").append("You Lose...");
+            $("#results2").append("You Win!");
+        }
+        if(sanp.user1Picked=="rock" && snap.user2Picked=="scissor"){
+            $("#results1").append("Rock- You Win!");
+            $("#results2").append("Scissor- You Lose...");
+        }
+        if(snap.user1Picked=="paper" && snap.user2Picked=="rock"){
+            $("#results1").append("You Win!");
+            $("#results2").append("You Lose...");
+        }
+        if(snap.user1Picked=="paper" && snap.user2Picked=="scissor"){
+            $("#results1").append("You Lose...");
+            $("#results2").append("You Win!");
+        }
+        if(snap.user1Picked=="scissor" && snap.user2Picked=="rock"){
+            $("#results1").append("You Lose...");
+            $("#results2").append("You Win!");
+        }
+        if(snap.user1Picked=="scissor" && snap.user2Picked=="paper"){
+            $("#results1").append("You Win!");
+            $("#results2").append("You Lose...");
+        }else{
+            $("#results1").append("You picked the same... It's a Tie!");
+            $("#results2").append("You picked the same... It's a Tie!");        
+        }
+    $("#restart").css("display", "block");
+    }
+})
 
-//how to code for each user seeing their own values- make array of players
-//if array length is more than 2 warn new user they muust wait
-//put button play functions under each user and hide of other array value
-//use splice to keep array positons the same if player 2 stays and player1 leaves
-// var connectionsRef = database.ref("/connections");
-// var connectedRef = database.ref(".info/connected");
 
-// connectedRef.on("value", function(snap) {
-//     if (snap.val()) {
-//       var con = connectionsRef.push(true);
-//       con.onDisconnect().remove();
-//     }
-//   });
 
-//   // When first loaded or when the connections list changes...
-//   connectionsRef.on("value", function(snapshot) {
-//     console.log(snapshot.numChildren());
-//     var key = snapshot.child(key);
-//     console.log(key);
-//     if (snapshot.numChildren()==1){
-//         console.log("wait for your opponent")
-//     }else if (snapshot.numChildren()==2){
-//         console.log("Play!")
-//     }else 
-//         console.log("Wait your turn...")
-//   });
-  
+$("#restart").click(function(){
+    user1Picked = "";
+    user2Picked= "";
+    p1gone= false;
+    p2gone= false;
+    $("#playBtn").css("display", "block");
+    $("#play2Btn").css("display", "block");
+    database.ref("/players").set({
+        user1Picked:user1Picked,
+        turn1:p1gone,
+        user2Picked:user2Picked,
+        turn2:p2gone
+    })
+
+})
